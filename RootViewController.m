@@ -126,7 +126,7 @@
     self.hostLabel = [[UILabel alloc] initWithFrame:CGRectMake(16, 16, w - 140, 26)];
     self.hostLabel.font = [UIFont systemFontOfSize:18 weight:UIFontWeightBold];
     self.hostLabel.textColor = [UIColor whiteColor];
-    self.hostLabel.text = @"🖥️ Máy Chủ Đang Đo...";
+    self.hostLabel.text = @"🖥️ Server Tweak";
     [self.headerCard addSubview:self.hostLabel];
     
     self.pingBadge = [[UILabel alloc] initWithFrame:CGRectMake(w - 120, 16, 104, 26)];
@@ -377,7 +377,7 @@
     if (!targetUrl) return;
     
     // Extract host name for display
-    self.hostLabel.text = [NSString stringWithFormat:@"🖥️ %@", targetUrl.host ?: @"Server"];
+    // Fixed hostLabel: Server Tweak
     
     NSMutableURLRequest *req = [NSMutableURLRequest requestWithURL:targetUrl cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:4.0];
     if (token.length > 0) {
@@ -406,9 +406,9 @@
                 return;
             }
             
-            if (json[@"hostname"]) {
-                self.hostLabel.text = [NSString stringWithFormat:@"🖥️ %@", json[@"hostname"]];
-            }
+            // Host label fixed
+            self.hostLabel.text = @"🖥️ Server Tweak";
+
             // Online Badge
             self.pingBadge.text = [NSString stringWithFormat:@"🟢 %.0f ms", pingMs];
             self.pingBadge.backgroundColor = [UIColor colorWithRed:0.05 green:0.25 blue:0.12 alpha:1.0];
