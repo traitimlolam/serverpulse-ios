@@ -361,7 +361,7 @@
     if (!rawUrl || rawUrl.length == 0) {
         rawUrl = @"http://127.0.0.1:8686";
     }
-    NSString *token = [defs stringForKey:@"kServerToken"] ?: @"";
+    NSString *token = [defs stringForKey:@"kServerToken"] ?: @"Hieu2026";
     
     if (![rawUrl hasSuffix:@"/api/metrics"]) {
         if ([rawUrl hasSuffix:@"/"]) {
