@@ -1,0 +1,65 @@
+name: Build ServerPulse TrollStore IPA
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build ServerPulse Application
+    runs-on: macos-14
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Theos (RootHide/Rootless)
+        uses: waruhachi/theos-action@v2.4.10
+        with:
+          theos-src: 'roothide/theos'
+          theos-branch: 'master'
+          sdks-src: 'theos/sdks'
+          sdks-branch: 'master'
+
+      - name: Build Application
+        run: |
+          make clean all FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
+          
+      - name: Package IPA with Icons and Info.plist
+        run: |
+          mkdir -p Payload
+          APP_PATH=$(find .theos/ -name "ServerPulse.app" -type d | head -n 1)
+          if [ -z "$APP_PATH" ]; then
+            echo "Error: ServerPulse.app not found!"
+            find .theos -maxdepth 4
+            exit 1
+          fi
+          echo "Found app at: $APP_PATH"
+          cp -r "$APP_PATH" Payload/
+          
+          # Ensure Info.plist and icons are inside Payload/ServerPulse.app
+          cp Resources/Info.plist Payload/ServerPulse.app/Info.plist
+          cp Resources/*.png Payload/ServerPulse.app/
+          rm -rf Payload/ServerPulse.app/*.dSYM
+          
+          zip -qr9 ServerPulse.ipa Payload/
+          mkdir -p output
+          mv ServerPulse.ipa output/
+          ls -la output/
+
+      - name: Create GitHub Release v1.0.0
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/heads/main') || startsWith(github.ref, 'refs/heads/master')
+        with:
+          tag_name: v1.0.0
+          name: "ServerPulse v1.0.0 - Giám Sát Server & Dây Chuyền Tweak (TrollStore)"
+          body: |
+            ## 🖥️ ServerPulse v1.0.0 (TrollStore IPA)
+            - Ứng dụng native iOS giám sát máy chủ Linux thời gian thực.
+            - Đo nhịp tim CPU, RAM, Ổ cứng, Uptime, Độ trễ Ping ms.
+            - Theo dõi tức thời hàng đợi dây chuyền sản xuất Tweak (Chờ thợ, Đang làm, Đã xong).
+            - Thiết lập linh hoạt IP Server, Port và Token bí mật qua giao diện Cài đặt ⚙️.
+          files: output/*.ipa
