@@ -94,7 +94,7 @@
     NSUserDefaults *defs = [NSUserDefaults standardUserDefaults];
     NSString *url = [defs stringForKey:@"kServerURL"];
     if (!url || url.length == 0) {
-        url = @"http://127.0.0.1:8686";
+        url = @"https://hieu-live.duckdns.org/server2";
     }
     self.urlField.text = url;
     self.tokenField.text = [defs stringForKey:@"kServerToken"] ?: @"";
