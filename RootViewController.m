@@ -358,8 +358,10 @@
 - (void)fetchMetrics {
     NSUserDefaults *defs = [NSUserDefaults standardUserDefaults];
     NSString *rawUrl = [defs stringForKey:@"kServerURL"];
-    if (!rawUrl || rawUrl.length == 0) {
-        rawUrl = @"http://127.0.0.1:8686";
+    if (!rawUrl || rawUrl.length == 0 || [rawUrl containsString:@"127.0.0.1"]) {
+        rawUrl = @"https://hieu-live.duckdns.org/server2";
+        [defs setObject:rawUrl forKey:@"kServerURL"];
+        [defs synchronize];
     }
     NSString *token = [defs stringForKey:@"kServerToken"] ?: @"Hieu2026";
     
