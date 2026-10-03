@@ -406,6 +406,9 @@
                 return;
             }
             
+            if (json[@"hostname"]) {
+                self.hostLabel.text = [NSString stringWithFormat:@"🖥️ %@", json[@"hostname"]];
+            }
             // Online Badge
             self.pingBadge.text = [NSString stringWithFormat:@"🟢 %.0f ms", pingMs];
             self.pingBadge.backgroundColor = [UIColor colorWithRed:0.05 green:0.25 blue:0.12 alpha:1.0];
